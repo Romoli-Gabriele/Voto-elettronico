@@ -1,4 +1,6 @@
 <?php
+require "./core/candidato.php";
+require "./core/lista.php";
 class queryBuilder
 {
     public $pdo;
@@ -29,18 +31,16 @@ class queryBuilder
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_CLASS, $intoClass);
     }
-    /*function insertTask($table, $task){
-        $descrizione = $task["descrizione"];
-        $sql = "INSERT INTO {$table} (descrizione, terminata) VALUES (:descrizione, {$task['terminata']})";
-       var_dump($sql);
-       $statement = $this->pdo->prepare($sql);
-       $statement->bindParam(':descrizione', $descrizione, PDO::PARAM_LOB);
-       $statement->execute();
-    }*/
+    
     function getCandidatiDaLista($id_lista){
         $statement = $this->pdo->prepare("SELECT nome, cognome, n_voti FROM candidati WHERE id_lista = {$id_lista}");
         $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_CLASS, 'candidato');
+        return $statement->fetchAll(PDO::FETCH_CLASS, candidato::class);
+    }
+    function getCandidato($id_candidato){
+        $statement = $this->pdo->prepare("SELECT nome, cognome, n_voti FROM candidati WHERE id_lista = {$id_candidato}");
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_CLASS, candidato::class);
     }
     function votaCandidato($id){
         $sql = "UPDATE `candidati` SET `n_voti` = n_voti + 1 WHERE `id`= {$id}";
